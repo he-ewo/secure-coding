@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}채팅{% endblock %}
+{% block content %}
+<h2>{{ user.username }}님과의 채팅</h2>
+
+<!-- 채팅 메시지 목록 -->
+<div id="chat">
+  <div id="messages">
+    {% for chat in chats %}
+      <div class="chat-message {% if chat.sender_id == session['user_id'] %}sent{% else %}received{% endif %}">
+        <strong>{{ "나" if chat.sender_id == session['user_id'] else user.username }}</strong>: 
+        {{ chat.message }}
+      </div>
+    {% endfor %}
+  </div>
+
+<!-- 채팅 입력 폼 -->
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="text" name="message" placeholder="메시지를 입력하세요..." required onkeydown="checkEnter(event)">
+    <button type="submit">전송</button>
+</form>
+
+<!-- 송금 폼 -->
+{% if session.get('user_id') and session['user_id'] != user.id %}
+  <form method="post" style="margin-top: 10px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="number" name="amount" min="1" placeholder="송금할 포인트" required>
+    <button type="submit" name="transfer_points">송금하기</button>
+  </form>
+{% endif %}
+
+<!-- 채팅 목록으로 이동 -->
+<a href="{{ url_for('chat_list') }}">채팅 목록으로 돌아가기</a>
+
+<script>
+  // 엔터키로 메세지 전송
+  function checkEnter(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      event.target.form.submit();
+    }
+  }
+
+  // 채팅 자동으로 아래로 스크롤 
+  window.onload = function () {
+    var messagesDiv = document.getElementById('messages');
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+</script>
+{% endblock %}
+

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}판매자 프로필{% endblock %}
+{% block content %}
+<h2>{{ seller.username }}의 프로필</h2>
+<p>이름: {{ seller.username }}</p>
+<p>이메일: {{ seller.email }}</p>
+<p>소개: {{ seller.bio if seller.bio else '소개글이 없습니다.' }}</p>
+
+
+<!-- 채팅 시작 버튼 (판매자가 본인이 아닐 경우에만 보이게) -->
+{% if session['user_id'] != seller.id %}
+    <a href="{{ url_for('chat_start', seller_id=seller.id) }}">채팅 시작</a>
+{% endif %}
+{% endblock %}
