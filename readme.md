@@ -9,7 +9,7 @@ conda env create -f enviroments.yaml
 python app.py
 ```
 
-로컬호스트로 서버를 실행한다.
+로컬호스트로 서버를 접속한다.
 ```
 https://127.0.0.1:5000 
 ```
